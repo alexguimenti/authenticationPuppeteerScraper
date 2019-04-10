@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const credentials = require("./credentials");
+const cheerio = require("cheerio");
 
 async function main() {
   try {
@@ -15,6 +16,10 @@ async function main() {
     await page.goto(
       "https://accounts.craigslist.org/login/home?show_tab=billing"
     );
+    const content = await page.content();
+    const $ = await cheerio.load(content);
+    const info = $("body > article > section > fieldset > b").text();
+    console.log(info);
   } catch (error) {
     console.log(error);
   }
